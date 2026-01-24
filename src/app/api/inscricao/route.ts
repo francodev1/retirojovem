@@ -12,6 +12,7 @@ interface FormData {
   participouAntes: string;
   comoConheceu: string;
   tipoPagamento: string;
+  precisaTransporte: string;
 }
 
 export async function POST(req: NextRequest) {

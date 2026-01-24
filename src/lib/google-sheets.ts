@@ -10,6 +10,7 @@ interface FormData {
   participouAntes: string;
   comoConheceu: string;
   tipoPagamento: string;
+  precisaTransporte: string;
 }
 
 // Inicializar autenticação
@@ -104,8 +105,10 @@ export async function sendToGoogleSheets(data: FormData) {
         data.participouAntes,
         data.comoConheceu,
         data.tipoPagamento,
-        new Date().toLocaleString('pt-BR'), // Data Inscrição
-        'Pendente', // Status Pagamento (novo)
+        data.precisaTransporte,
+        '', // paymentId (vazio, será preenchido depois)
+        'Pendente', // paymentStatus
+        new Date().toLocaleString('pt-BR'), // createdAt
       ],
     ];
 
