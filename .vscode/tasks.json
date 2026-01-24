@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Dev Server 4200",
+			"type": "shell",
+			"command": "npm run dev -- -p 4200",
+			"isBackground": true
+		}
+	]
+}
