@@ -74,6 +74,9 @@ async function handlePix(nomeInscrito: string, email: string, telefone: string, 
     };
     
     console.log('🔵 Criando preferência PIX no MercadoPago...');
+    console.log('🔵 Payload enviado:', JSON.stringify(pixPayload, null, 2));
+    console.log('🔵 Headers:', { Authorization: `Bearer ${accessToken?.slice(0, 20)}...`, 'Content-Type': 'application/json' });
+    
     const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
       headers: {
@@ -86,6 +89,7 @@ async function handlePix(nomeInscrito: string, email: string, telefone: string, 
 
     const data = await response.json();
     console.log('🔵 Resposta MercadoPago PIX (status:', response.status, ')');
+    console.log('🔵 Dados retornados:', JSON.stringify(data, null, 2));
 
     if (data.init_point) {
       console.log('✅ Checkout PIX criado com sucesso');
@@ -152,6 +156,9 @@ async function handleCheckoutPro(nomeInscrito: string, email: string, telefone: 
     };
     
     console.log('🔵 Criando preferência CARTÃO no MercadoPago...');
+    console.log('🔵 Payload enviado:', JSON.stringify(cartaoPayload, null, 2));
+    console.log('🔵 Headers:', { Authorization: `Bearer ${accessToken?.slice(0, 20)}...`, 'Content-Type': 'application/json' });
+    
     const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
       headers: {
@@ -164,6 +171,7 @@ async function handleCheckoutPro(nomeInscrito: string, email: string, telefone: 
 
     const data = await response.json();
     console.log('🔵 Resposta MercadoPago CARTÃO (status:', response.status, ')');
+    console.log('🔵 Dados retornados:', JSON.stringify(data, null, 2));
 
     if (data.init_point) {
       console.log('✅ Checkout CARTÃO criado com sucesso');
