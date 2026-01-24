@@ -116,14 +116,6 @@ async function handleCheckoutPro(nomeInscrito: string, email: string, telefone: 
     
     const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
 
-    // Limpar telefone: remover todos os caracteres não numéricos
-    const telefoneLimpo = telefone.replace(/\D/g, '');
-    
-    // Se o telefone tem 11 dígitos (com DDD 55), remover o 55
-    const numeroSoArabicoSemDDD = telefoneLimpo.startsWith('55') 
-      ? telefoneLimpo.slice(2) 
-      : telefoneLimpo;
-
     // Criar preferência de pagamento apenas com Cartão
     const cartaoPayload = {
       items: [
@@ -138,10 +130,6 @@ async function handleCheckoutPro(nomeInscrito: string, email: string, telefone: 
       payer: {
         name: nomeInscrito,
         email: email,
-        phone: {
-          area_code: '55',
-          number: numeroSoArabicoSemDDD,
-        },
       },
       payment_methods: {
         excluded_payment_methods: [
@@ -154,7 +142,6 @@ async function handleCheckoutPro(nomeInscrito: string, email: string, telefone: 
           { id: 'atm' },
         ],
         installments: 12,
-        default_installments: 1,
       },
       back_urls: {
         success: `${process.env.NEXT_PUBLIC_BASE_URL}/pagamento/sucesso`,
@@ -162,12 +149,6 @@ async function handleCheckoutPro(nomeInscrito: string, email: string, telefone: 
         pending: `${process.env.NEXT_PUBLIC_BASE_URL}/pagamento/pendente`,
       },
       notification_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/notificacoes/pagamento`,
-      metadata: {
-        nomeInscrito,
-        email,
-        telefone,
-        method: 'cartao',
-      },
     };
     
     console.log('🔵 Criando preferência CARTÃO no MercadoPago...');
