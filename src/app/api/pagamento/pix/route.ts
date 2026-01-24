@@ -110,8 +110,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-      { error: 'Erro interno ao processar PIX' },
-      { status: 500 }
-    );
-  }
-}
