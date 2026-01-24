@@ -31,45 +31,33 @@ async function handlePix(nomeInscrito: string, email: string, telefone: string, 
     const pixPayload = {
       items: [
         {
-          title: `Inscrição Retiro Closer`,
+          title: `Inscrição Retiro Closer - ${nomeInscrito}`,
           quantity: 1,
           unit_price: valor,
           currency_id: 'BRL',
-          description: `Inscrição para ${nomeInscrito}`,
         },
       ],
       payer: {
         name: nomeInscrito,
         email: email,
+        phone: {
+          area_code: '55',
+          number: (telefone || '').replace(/\D/g, ''),
+        },
       },
+      statement_descriptor: 'RETIRO CLOSER',
       payment_methods: {
-        excluded_payment_methods: [
-          { id: 'bolbradesco' },
-          { id: 'boletario' },
-          { id: 'visa' },
-          { id: 'mastercard' },
-          { id: 'amex' },
-          { id: 'hipercard' },
-          { id: 'elo' },
-        ],
         excluded_payment_types: [
-          { id: 'ticket' },
-          { id: 'atm' },
           { id: 'credit_card' },
           { id: 'debit_card' },
+          { id: 'ticket' },
+          { id: 'atm' },
         ],
       },
       back_urls: {
         success: `${process.env.NEXT_PUBLIC_BASE_URL}/pagamento/sucesso`,
-        failure: `${process.env.NEXT_PUBLIC_BASE_URL}/pagamento/erro`,
+        failure: `${process.env.NEXT_PUBLIC_BASE_URL}/pagamento`,
         pending: `${process.env.NEXT_PUBLIC_BASE_URL}/pagamento/pendente`,
-      },
-      notification_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/notificacoes/pagamento`,
-      metadata: {
-        nomeInscrito,
-        email,
-        telefone,
-        method: 'pix',
       },
     };
     
@@ -124,23 +112,22 @@ async function handleCheckoutPro(nomeInscrito: string, email: string, telefone: 
     const cartaoPayload = {
       items: [
         {
-          title: `Inscrição Retiro Closer`,
+          title: `Inscrição Retiro Closer - ${nomeInscrito}`,
           quantity: 1,
           unit_price: valor,
           currency_id: 'BRL',
-          description: `Inscrição para ${nomeInscrito}`,
         },
       ],
       payer: {
         name: nomeInscrito,
         email: email,
+        phone: {
+          area_code: '55',
+          number: (telefone || '').replace(/\D/g, ''),
+        },
       },
+      statement_descriptor: 'RETIRO CLOSER',
       payment_methods: {
-        excluded_payment_methods: [
-          { id: 'bolbradesco' },
-          { id: 'boletario' },
-          { id: 'pix' },
-        ],
         excluded_payment_types: [
           { id: 'ticket' },
           { id: 'atm' },
@@ -149,10 +136,9 @@ async function handleCheckoutPro(nomeInscrito: string, email: string, telefone: 
       },
       back_urls: {
         success: `${process.env.NEXT_PUBLIC_BASE_URL}/pagamento/sucesso`,
-        failure: `${process.env.NEXT_PUBLIC_BASE_URL}/pagamento/erro`,
+        failure: `${process.env.NEXT_PUBLIC_BASE_URL}/pagamento`,
         pending: `${process.env.NEXT_PUBLIC_BASE_URL}/pagamento/pendente`,
       },
-      notification_url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/notificacoes/pagamento`,
     };
     
     console.log('🔵 Criando preferência CARTÃO no MercadoPago...');
