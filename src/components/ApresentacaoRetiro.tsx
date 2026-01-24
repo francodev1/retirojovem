@@ -140,17 +140,17 @@ export default function ApresentacaoRetiro() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                nome: 'Lucas',
+                nome: 'Lucas Franco',
                 cargo: 'Coordenador',
                 icon: '🎯',
               },
               {
-                nome: 'Mauricio',
+                nome: 'Mauricio Silva',
                 cargo: 'Coordenador',
                 icon: '🎯',
               },
               {
-                nome: 'Elieser',
+                nome: 'Elieser Borges',
                 cargo: 'Coordenador',
                 icon: '🎯',
               },

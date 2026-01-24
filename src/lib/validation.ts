@@ -118,6 +118,14 @@ export function validateFormData(data: any): ValidationResult {
     sanitized.tipoPagamento = data.tipoPagamento;
   }
 
+  // Precisa de Transporte
+  const transporteOptions = ['sim', 'nao'];
+  if (!data.precisaTransporte || !transporteOptions.includes(data.precisaTransporte)) {
+    errors.push('Campo Transporte inválido');
+  } else {
+    sanitized.precisaTransporte = data.precisaTransporte;
+  }
+
   return {
     isValid: errors.length === 0,
     errors,

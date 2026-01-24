@@ -15,6 +15,7 @@ interface FormData {
   participouAntes: string;
   comoConheceu: string;
   tipoPagamento: string;
+  precisaTransporte: string;
 }
 
 export default function InscricaoForm() {
@@ -28,6 +29,7 @@ export default function InscricaoForm() {
     participouAntes: '',
     comoConheceu: '',
     tipoPagamento: '',
+    precisaTransporte: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -115,6 +117,7 @@ export default function InscricaoForm() {
         else if (error.includes('experiência')) errorMap.participouAntes = error;
         else if (error.includes('Como soube')) errorMap.comoConheceu = error;
         else if (error.includes('Tipo de pagamento')) errorMap.tipoPagamento = error;
+        else if (error.includes('Transporte')) errorMap.precisaTransporte = error;
       });
       setErrors(errorMap);
       setStatus('error');
@@ -150,6 +153,7 @@ export default function InscricaoForm() {
           participouAntes: '',
           comoConheceu: '',
           tipoPagamento: '',
+          precisaTransporte: '',
         });
 
         // Redirect to payment after 2 seconds
@@ -405,6 +409,27 @@ export default function InscricaoForm() {
                 <option value="dinheiro">Dinheiro - Na Chegada</option>
               </select>
               {errors.tipoPagamento && <p className="text-red-400 text-sm mt-1">{errors.tipoPagamento}</p>}
+            </motion.div>
+
+            {/* Precisa de Transporte */}
+            <motion.div custom={9} variants={inputVariants} initial="hidden" animate="visible">
+              <label className="block text-blue-200 font-semibold mb-2">Precisa de Transporte?</label>
+              <select
+                name="precisaTransporte"
+                value={formData.precisaTransporte}
+                onChange={handleChange}
+                required
+                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
+                  errors.precisaTransporte
+                    ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
+                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                }`}
+              >
+                <option value="">Selecione uma opção</option>
+                <option value="sim">Sim, preciso de transporte</option>
+                <option value="nao">Não, vou por conta própria</option>
+              </select>
+              {errors.precisaTransporte && <p className="text-red-400 text-sm mt-1">{errors.precisaTransporte}</p>}
             </motion.div>
           </div>
 
