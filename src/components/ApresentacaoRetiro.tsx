@@ -91,7 +91,7 @@ export default function ApresentacaoRetiro() {
             <div className="text-4xl mb-4">🎫</div>
             <h3 className="text-xl font-bold text-white mb-3">Vagas Disponíveis</h3>
             <div className="flex items-baseline gap-2 mb-4">
-              <span className="text-4xl font-bold text-cyan-400">180</span>
+              <span className="text-4xl font-bold text-cyan-400">100</span>
               <span className="text-blue-300">vagas totais</span>
             </div>
             <div className="w-full bg-blue-950/50 rounded-full h-2 overflow-hidden">
@@ -140,17 +140,17 @@ export default function ApresentacaoRetiro() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
-                nome: 'Mauricio Silva',
+                nome: 'Lucas',
                 cargo: 'Coordenador',
                 icon: '🎯',
               },
               {
-                nome: 'Lucas Franco',
+                nome: 'Mauricio',
                 cargo: 'Coordenador',
                 icon: '🎯',
               },
               {
-                nome: 'Elieser Borges',
+                nome: 'Elieser',
                 cargo: 'Coordenador',
                 icon: '🎯',
               },
@@ -192,22 +192,22 @@ export default function ApresentacaoRetiro() {
           <div className="bg-blue-900/20 border border-cyan-400/20 rounded-xl p-6">
             <h4 className="text-lg font-bold text-cyan-400 mb-3">✨ O que te espera</h4>
             <ul className="space-y-2 text-blue-200 text-sm">
-              <li>✓ Momentos de adoração e worship</li>
-              <li>✓ Palestras inspiradoras</li>
-              <li>✓ Comunhão genuína com amigos</li>
-              <li>✓ Atividades dinâmicas e divertidas</li>
-              <li>✓ Tempo de oração e reflexão</li>
+              <li>✓ Momentos de louvor e comunhão no Espírito</li>
+              <li>✓ Mensagens transformadoras da Palavra</li>
+              <li>✓ Conexão genuína com a comunidade cristã</li>
+              <li>✓ Atividades incríveis e diversas</li>
+              <li>✓ Tempo de busca pela face de Deus</li>
             </ul>
           </div>
 
           <div className="bg-blue-900/20 border border-blue-400/20 rounded-xl p-6">
             <h4 className="text-lg font-bold text-blue-400 mb-3">🎒 Prepare-se para</h4>
             <ul className="space-y-2 text-blue-200 text-sm">
-              <li>✓ Crescimento espiritual real</li>
-              <li>✓ Amizades duradouras</li>
-              <li>✓ Experiência transformadora</li>
-              <li>✓ Memórias inesquecíveis</li>
-              <li>✓ Retorno renovado em fé</li>
+              <li>✓ Crescimento real com Jesus Cristo</li>
+              <li>✓ Amizades que vão durar para vida toda</li>
+              <li>✓ Uma experiência que vai te transformar</li>
+              <li>✓ Memórias abençoadas e marcantes</li>
+              <li>✓ Retorno com o coração renovado em Deus</li>
             </ul>
           </div>
         </motion.div>

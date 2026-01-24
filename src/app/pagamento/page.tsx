@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
 const VALOR_INSCRICAO = 296;
+const VALOR_PIX = 289;
+const VALOR_DINHEIRO = 289;
 const PIX_ESTATICO = '00020101021126810014BR.GOV.BCB.PIX2559pix-qr.mercadopago.com/instore/ol/v2/3Z93NLRsiiBmx1Ecojwhpj5204000053039865802BR5912FONTE CHURCH6009SAO PAULO62080504mpis630456D4';
 
 export default function PagamentoPage() {
@@ -32,7 +34,7 @@ export default function PagamentoPage() {
           nomeInscrito: userData.nome,
           email: userData.email,
           telefone: userData.telefone,
-          valor: VALOR_INSCRICAO,
+          valor: VALOR_PIX,
           method: 'pix',
         }),
       });
@@ -147,7 +149,7 @@ export default function PagamentoPage() {
           className="bg-blue-950/50 border border-blue-400/30 rounded-xl p-6 mb-8"
         >
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold text-blue-300">Retiro Closer 2025</h2>
+            <h2 className="text-xl font-bold text-blue-300">Retiro Closer 2026</h2>
             <span className="text-3xl font-bold text-blue-400">R$ 296.00</span>
           </div>
           <div className="border-t border-blue-400/20 pt-4 flex justify-between">
@@ -166,7 +168,7 @@ export default function PagamentoPage() {
             <div className="text-5xl mb-4">📲</div>
             <h3 className="text-2xl font-bold text-orange-300 mb-2">PIX</h3>
             <p className="text-gray-400 text-sm mb-4">Pagamento instantâneo e seguro</p>
-            <p className="text-orange-400 font-bold text-lg mb-4">R$ {VALOR_INSCRICAO},00</p>
+            <p className="text-orange-400 font-bold text-lg mb-4">R$ {VALOR_PIX},00</p>
             <img 
               src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(PIX_ESTATICO)}`}
               alt="QR Code PIX" 
@@ -215,8 +217,8 @@ export default function PagamentoPage() {
             <div className="text-5xl mb-4">💰</div>
             <h3 className="text-2xl font-bold text-green-300 mb-2">Dinheiro</h3>
             <p className="text-gray-400 text-sm mb-4">Pagamento na chegada</p>
-            <p className="text-green-400 font-bold text-lg">R$ {VALOR_INSCRICAO},00</p>
-            <p className="text-gray-500 text-xs mt-2">Fonte Church - Maringá</p>
+            <p className="text-green-400 font-bold text-lg">R$ {VALOR_DINHEIRO},00</p>
+            <p className="text-gray-500 text-xs mt-2">Contato: 51 98567-0124</p>
           </motion.div>
         </div>
 
@@ -241,7 +243,7 @@ export default function PagamentoPage() {
           <ul className="space-y-2 text-gray-300 text-sm">
             <li>✓ Seu pagamento é seguro e protegido pelo MercadoPago</li>
             <li>✓ Você receberá um email de confirmação</li>
-            <li>✓ Dúvidas? Contato: (44) 98765-4321</li>
+            <li>✓ Dúvidas? Contato: 51 98567-0124</li>
           </ul>
         </motion.div>
       </div>

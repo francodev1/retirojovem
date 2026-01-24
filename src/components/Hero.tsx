@@ -120,7 +120,7 @@ export default function Hero() {
           className="text-lg md:text-xl text-blue-200 mb-8 max-w-2xl mx-auto leading-relaxed"
           variants={itemVariants}
         >
-          Uma experiência transformadora para jovens cristãos. Venha crescer, conectar e descobrir seu propósito.
+          Uma experiência transformadora para jovens cristãos. Venha ficar mais perto de Deus, conectar em comunhão genuína e descobrir seu propósito no Espírito Santo.
         </motion.p>
 
         <motion.p
@@ -134,7 +134,7 @@ export default function Hero() {
           className="text-sm md:text-base text-blue-300/70 mb-8 max-w-2xl mx-auto"
           variants={itemVariants}
         >
-          Closer significa "mais perto" - um momento para se aproximar de Deus e de si mesmo, crescendo em comunhão genuína.
+          Closer significa "mais perto" - um momento para você se aproximar de Jesus, do Pai Celestial e do Espírito Santo, crescendo em comunhão genuína com a galera.
         </motion.p>
 
         <motion.div
@@ -172,7 +172,7 @@ export default function Hero() {
             <div className="text-sm text-blue-200">Dias</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-400 mb-2">180</div>
+            <div className="text-3xl font-bold text-blue-400 mb-2">100</div>
             <div className="text-sm text-blue-200">Vagas</div>
           </div>
         </motion.div>

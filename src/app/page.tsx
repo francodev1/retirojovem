@@ -19,7 +19,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-slate-950 border-t border-blue-400/20 py-8 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-blue-300 mb-2">© 2025 Retiro Closer. Todos os direitos reservados.</p>
+          <p className="text-blue-300 mb-2">© 2026 Retiro Closer. Todos os direitos reservados.</p>
           <p className="text-blue-200 text-sm">
             Desenvolvido com ❤️ para jovens cristãos apaixonados
           </p>
