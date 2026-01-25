@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 
 const VALOR_INSCRICAO = 296;
 const VALOR_PIX = 289;
-const VALOR_DINHEIRO = 289;
 const PIX_ESTATICO = '00020101021126810014BR.GOV.BCB.PIX2559pix-qr.mercadopago.com/instore/ol/v2/3Z93NLRsiiBmx1Ecojwhpj5204000053039865802BR5912FONTE CHURCH6009SAO PAULO62080504mpis630456D4';
 
 export default function PagamentoPage() {
@@ -91,40 +90,6 @@ export default function PagamentoPage() {
     setLoading(false);
   };
 
-  const handleTestPayment = async () => {
-    setLoading(true);
-    setError('');
-    
-    try {
-      console.log('🔵 Criando Teste R$ 1...');
-      const response = await fetch('/api/pagamento/cartao', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          nomeInscrito: 'TESTE - ' + userData.nome,
-          email: userData.email,
-          telefone: userData.telefone,
-          valor: 1,
-          method: 'cartao',
-        }),
-      });
-
-      const data = await response.json();
-      console.log('✅ Resposta Teste:', data);
-      
-      if (data.success && data.init_point) {
-        console.log('🟢 Redirecionando para MercadoPago Teste...');
-        window.location.href = data.init_point;
-      } else {
-        setError(data.error || 'Erro ao criar teste');
-      }
-    } catch (err) {
-      setError('Erro ao conectar com o servidor');
-      console.error(err);
-    }
-    
-    setLoading(false);
-  };
 
 
   return (
@@ -192,35 +157,7 @@ export default function PagamentoPage() {
           </motion.button>
         </div>
 
-        {/* Botões secundários */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Teste R$ 1 */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleTestPayment}
-            disabled={loading}
-            className="bg-gradient-to-br from-purple-900/40 to-purple-800/40 border-2 border-purple-400/30 rounded-xl p-6 hover:border-purple-400/60 transition-all text-left group disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">🧪</div>
-            <h3 className="text-2xl font-bold text-purple-300 mb-2">Teste - Ativar MP</h3>
-            <p className="text-gray-400 text-sm mb-4">Pagamento de teste</p>
-            <p className="text-purple-400 font-bold text-lg">R$ 1,00</p>
-            <p className="text-gray-500 text-xs mt-2">Para ativar payment ID</p>
-          </motion.button>
-
-          {/* Dinheiro */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-gradient-to-br from-green-900/40 to-green-800/40 border-2 border-green-400/30 rounded-xl p-6 hover:border-green-400/60 transition-all cursor-pointer"
-          >
-            <div className="text-5xl mb-4">💰</div>
-            <h3 className="text-2xl font-bold text-green-300 mb-2">Dinheiro</h3>
-            <p className="text-gray-400 text-sm mb-4">Pagamento na chegada</p>
-            <p className="text-green-400 font-bold text-lg">R$ {VALOR_DINHEIRO},00</p>
-            <p className="text-gray-500 text-xs mt-2">Contato: 51 98567-0124</p>
-          </motion.div>
-        </div>
+        
 
         {error && (
           <motion.div

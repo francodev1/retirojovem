@@ -111,7 +111,7 @@ export function validateFormData(data: any): ValidationResult {
   }
 
   // Tipo de pagamento
-  const pagamentoOptions = ['pix', 'cartao', 'dinheiro'];
+  const pagamentoOptions = ['pix', 'cartao'];
   if (!data.tipoPagamento || !pagamentoOptions.includes(data.tipoPagamento)) {
     errors.push('Tipo de pagamento inválido');
   } else {

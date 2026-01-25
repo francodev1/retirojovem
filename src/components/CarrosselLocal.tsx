@@ -21,17 +21,17 @@ export default function CarrosselLocal() {
     },
     {
       src: '/assets/foto04.jpg',
-      title: 'Dormitórios',
+      title: 'Campo Futebol',
       desc: 'Acomodações confortáveis e acolhedoras',
     },
     {
       src: '/assets/foto05.jpg',
-      title: 'Refeitório',
-      desc: 'Refeições deliciosas em comunhão',
+      title: 'Lazer e Diversão',
+      desc: 'Diversão em comunhão',
     },
     {
       src: '/assets/Foto10.jpg',
-      title: 'Natureza',
+      title: 'Mais Diversão',
       desc: 'Ambiente tranquilo e inspirador',
     },
     {

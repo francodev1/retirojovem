@@ -406,7 +406,6 @@ export default function InscricaoForm() {
                 <option value="">Selecione uma opção</option>
                 <option value="pix">PIX - Pagamento Instantâneo</option>
                 <option value="cartao">Cartão de Crédito - Parcelado</option>
-                <option value="dinheiro">Dinheiro - Na Chegada</option>
               </select>
               {errors.tipoPagamento && <p className="text-red-400 text-sm mt-1">{errors.tipoPagamento}</p>}
             </motion.div>
