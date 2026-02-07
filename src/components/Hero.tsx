@@ -143,7 +143,6 @@ export default function Hero() {
           Closer significa "mais perto" - um momento para você se aproximar de Jesus, do Pai Celestial e do Espírito Santo, crescendo em comunhão genuína com a galera.
         </motion.p>
 
-
         {/* CTA Buttons */}
         <motion.div
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
