@@ -19,23 +19,29 @@ interface FormData {
 }
 
 export default function InscricaoForm() {
-  const [formData, setFormData] = useState<FormData>({
-    nome: '',
-    email: '',
-    telefone: '',
-    idade: '',
-    alergia: '',
-    beliche: '',
-    participouAntes: '',
-    comoConheceu: '',
-    tipoPagamento: '',
-    precisaTransporte: '',
-  });
-
+  const [stage, setStage] = useState<'pergunta' | 'inscricao'>('pergunta');
+  const [inscritos, setInscritos] = useState<FormData[]>([
+    {
+      nome: '',
+      email: '',
+      telefone: '',
+      idade: '',
+      alergia: '',
+      beliche: '',
+      participouAntes: '',
+      comoConheceu: '',
+      tipoPagamento: '',
+      precisaTransporte: '',
+    },
+  ]);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  const formData = inscritos[currentIndex];
+  const totalInscritos = inscritos.length;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -82,10 +88,12 @@ export default function InscricaoForm() {
         break;
     }
 
-    setFormData((prev) => ({
-      ...prev,
+    const newInscritos = [...inscritos];
+    newInscritos[currentIndex] = {
+      ...newInscritos[currentIndex],
       [name]: formattedValue,
-    }));
+    };
+    setInscritos(newInscritos);
     
     // Limpar erro do campo quando usuário começa a digitar
     if (errors[name]) {
@@ -102,13 +110,12 @@ export default function InscricaoForm() {
     setStatus('idle');
     setErrors({});
 
-    // Validar localmente primeiro
+    // Validar inscrição atual
     const validation = validateFormData(formData);
 
     if (!validation.isValid) {
       const errorMap: Record<string, string> = {};
       validation.errors.forEach((error) => {
-        // Mapear erros para campos específicos
         if (error.includes('Nome')) errorMap.nome = error;
         else if (error.includes('Email')) errorMap.email = error;
         else if (error.includes('Telefone')) errorMap.telefone = error;
@@ -126,41 +133,41 @@ export default function InscricaoForm() {
       return;
     }
 
+    // Se há mais inscrições a preencher, ir para a próxima
+    if (currentIndex < inscritos.length - 1) {
+      setCurrentIndex(currentIndex + 1);
+      setErrors({});
+      setLoading(false);
+      return;
+    }
+
+    // Enviar todas as inscrições para o servidor
     try {
-      const response = await axios.post('/api/inscricao', formData);
-
-      if (response.status === 200) {
-        setStatus('success');
-        setMessage('✅ Inscrição enviada com sucesso! Você será redirecionado para o pagamento.');
-        
-        // Salvar dados no localStorage para recuperar na página de pagamento
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('inscricaoData', JSON.stringify({
-            nome: formData.nome,
-            email: formData.email,
-            telefone: formData.telefone.replace(/\D/g, ''),
-          }));
+      // Enviar cada inscrição
+      for (let i = 0; i < inscritos.length; i++) {
+        const response = await axios.post('/api/inscricao', inscritos[i]);
+        if (response.status !== 200) {
+          throw new Error(`Erro ao enviar inscrição ${i + 1}`);
         }
-        
-        // Reset form
-        setFormData({
-          nome: '',
-          email: '',
-          telefone: '',
-          idade: '',
-          alergia: '',
-          beliche: '',
-          participouAntes: '',
-          comoConheceu: '',
-          tipoPagamento: '',
-          precisaTransporte: '',
-        });
-
-        // Redirect to payment after 2 seconds
-        setTimeout(() => {
-          window.location.href = '/pagamento';
-        }, 2000);
       }
+
+      setStatus('success');
+      setMessage(`✅ ${inscritos.length} inscrição(ões) enviada(s) com sucesso! Você será redirecionado para o pagamento.`);
+      
+      // Salvar primeiro inscrição no localStorage para recuperar na página de pagamento
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('inscricaoData', JSON.stringify({
+          nome: inscritos[0].nome,
+          email: inscritos[0].email,
+          telefone: inscritos[0].telefone.replace(/\D/g, ''),
+          quantidadeInscritos: inscritos.length,
+        }));
+      }
+
+      // Redirect to payment after 2 seconds
+      setTimeout(() => {
+        window.location.href = '/pagamento';
+      }, 2000);
     } catch (error: any) {
       setStatus('error');
       const errorMessage = error.response?.data?.message || 'Erro ao enviar inscrição. Tente novamente.';
@@ -195,7 +202,7 @@ export default function InscricaoForm() {
   };
 
   return (
-    <section id="inscricao" className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 py-20 px-4">
+    <section id="inscricao" className="min-h-screen bg-gradient-to-br from-slate-900 via-orange-950 to-slate-900 py-20 px-4">
       <motion.div
         className="max-w-2xl mx-auto"
         variants={containerVariants}
@@ -203,26 +210,88 @@ export default function InscricaoForm() {
         whileInView="visible"
         viewport={{ once: true }}
       >
-        <motion.div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Inscreva-se Agora
-          </h2>
-          <p className="text-blue-200 text-lg">
-            Preencha o formulário abaixo para garantir seu lugar no Retiro Closer
-          </p>
-        </motion.div>
+        {/* PERGUNTA INICIAL: Já se inscreveu? */}
+        {stage === 'pergunta' && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.4 }}
+            className="text-center mb-12"
+          >
+            <div className="bg-gradient-to-br from-orange-900/60 to-amber-900/60 backdrop-blur-md border-2 border-orange-400/40 rounded-3xl p-12 max-w-md mx-auto shadow-2xl">
+              <div className="text-6xl mb-6">🎉</div>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Você já se inscreveu?
+              </h2>
+              <p className="text-orange-200 text-lg mb-10">
+                Se já completou sua inscrição, prossiga diretamente para o pagamento
+              </p>
 
-        <motion.form
-          onSubmit={handleSubmit}
-          className="bg-blue-900/30 backdrop-blur-md border border-blue-400/20 rounded-2xl p-8 space-y-6"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-4">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => {
+                    window.location.href = '/pagamento';
+                  }}
+                  className="py-4 px-6 bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-green-500/50"
+                >
+                  ✅ Sim, já estou inscrito
+                </motion.button>
+
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setStage('inscricao')}
+                  className="py-4 px-6 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/50"
+                >
+                  ❌ Não, quero me inscrever
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* FORMULÁRIO DE INSCRIÇÃO */}
+        {stage === 'inscricao' && (
+          <>
+            <motion.div className="text-center mb-12">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                Inscreva-se Agora
+              </h2>
+              <p className="text-blue-200 text-lg">
+                Preencha o formulário abaixo para garantir seu lugar no Retiro Closer
+              </p>
+            </motion.div>
+
+            <motion.form
+              onSubmit={handleSubmit}
+              className="bg-orange-900/30 backdrop-blur-md border border-orange-400/20 rounded-2xl p-8 space-y-6"
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+            >
+              {/* Indicador de progresso */}
+              <div className="bg-orange-950/50 rounded-lg p-4 border border-orange-400/20">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-orange-300 font-semibold">
+                    Pessoa {currentIndex + 1} de {totalInscritos}
+                  </span>
+                  <span className="text-orange-400 text-sm">{Math.round(((currentIndex + 1) / totalInscritos) * 100)}%</span>
+                </div>
+                <div className="w-full bg-orange-900 rounded-full h-2">
+                  <div
+                    className="bg-gradient-to-r from-orange-500 to-amber-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${((currentIndex + 1) / totalInscritos) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Nome */}
             <motion.div custom={0} variants={inputVariants} initial="hidden" animate="visible">
-              <label className="block text-blue-200 font-semibold mb-2">Nome Completo</label>
+              <label className="block text-orange-200 font-semibold mb-2">Nome Completo</label>
               <input
                 type="text"
                 name="nome"
@@ -230,10 +299,10 @@ export default function InscricaoForm() {
                 onChange={handleChange}
                 required
                 maxLength={100}
-                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white placeholder-blue-300/50 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full bg-orange-950/50 border rounded-lg px-4 py-3 text-white placeholder-orange-300/50 focus:outline-none focus:ring-2 transition-all ${
                   errors.nome
                     ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
-                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'border-orange-400/30 focus:border-orange-400 focus:ring-orange-400/20'
                 }`}
                 placeholder="ex: João da Silva"
               />
@@ -242,7 +311,7 @@ export default function InscricaoForm() {
 
             {/* Email */}
             <motion.div custom={1} variants={inputVariants} initial="hidden" animate="visible">
-              <label className="block text-blue-200 font-semibold mb-2">Email</label>
+              <label className="block text-orange-200 font-semibold mb-2">Email</label>
               <input
                 type="email"
                 name="email"
@@ -250,10 +319,10 @@ export default function InscricaoForm() {
                 onChange={handleChange}
                 required
                 maxLength={255}
-                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white placeholder-blue-300/50 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full bg-orange-950/50 border rounded-lg px-4 py-3 text-white placeholder-orange-300/50 focus:outline-none focus:ring-2 transition-all ${
                   errors.email
                     ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
-                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'border-orange-400/30 focus:border-orange-400 focus:ring-orange-400/20'
                 }`}
                 placeholder="seu.email@dominio.com"
               />
@@ -262,7 +331,7 @@ export default function InscricaoForm() {
 
             {/* Telefone */}
             <motion.div custom={2} variants={inputVariants} initial="hidden" animate="visible">
-              <label className="block text-blue-200 font-semibold mb-2">Telefone</label>
+              <label className="block text-orange-200 font-semibold mb-2">Telefone</label>
               <input
                 type="tel"
                 name="telefone"
@@ -270,10 +339,10 @@ export default function InscricaoForm() {
                 onChange={handleChange}
                 required
                 maxLength={15}
-                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white placeholder-blue-300/50 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full bg-orange-950/50 border rounded-lg px-4 py-3 text-white placeholder-orange-300/50 focus:outline-none focus:ring-2 transition-all ${
                   errors.telefone
                     ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
-                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'border-orange-400/30 focus:border-orange-400 focus:ring-orange-400/20'
                 }`}
                 placeholder="(XX) XXXXX-XXXX"
               />
@@ -282,7 +351,7 @@ export default function InscricaoForm() {
 
             {/* Idade */}
             <motion.div custom={3} variants={inputVariants} initial="hidden" animate="visible">
-              <label className="block text-blue-200 font-semibold mb-2">Idade</label>
+              <label className="block text-orange-200 font-semibold mb-2">Idade</label>
               <input
                 type="number"
                 name="idade"
@@ -292,10 +361,10 @@ export default function InscricaoForm() {
                 min="11"
                 max="120"
                 maxLength={3}
-                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white placeholder-blue-300/50 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full bg-orange-950/50 border rounded-lg px-4 py-3 text-white placeholder-orange-300/50 focus:outline-none focus:ring-2 transition-all ${
                   errors.idade
                     ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
-                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'border-orange-400/30 focus:border-orange-400 focus:ring-orange-400/20'
                 }`}
                 placeholder="11-120"
               />
@@ -304,17 +373,17 @@ export default function InscricaoForm() {
 
             {/* Alergia */}
             <motion.div custom={4} variants={inputVariants} initial="hidden" animate="visible">
-              <label className="block text-blue-200 font-semibold mb-2">Alergia a Alimentos ou Remédios</label>
+              <label className="block text-orange-200 font-semibold mb-2">Alergia a Alimentos ou Remédios</label>
               <input
                 type="text"
                 name="alergia"
                 value={formData.alergia}
                 onChange={handleChange}
                 maxLength={100}
-                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white placeholder-blue-300/50 focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full bg-orange-950/50 border rounded-lg px-4 py-3 text-white placeholder-orange-300/50 focus:outline-none focus:ring-2 transition-all ${
                   errors.alergia
                     ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
-                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'border-orange-400/30 focus:border-orange-400 focus:ring-orange-400/20'
                 }`}
                 placeholder="ex: Amendoim, Sem restrição"
               />
@@ -323,16 +392,16 @@ export default function InscricaoForm() {
 
             {/* Beliche */}
             <motion.div custom={5} variants={inputVariants} initial="hidden" animate="visible">
-              <label className="block text-blue-200 font-semibold mb-2">Posição no Beliche</label>
+              <label className="block text-orange-200 font-semibold mb-2">Posição no Beliche</label>
               <select
                 name="beliche"
                 value={formData.beliche}
                 onChange={handleChange}
                 required
-                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full bg-orange-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
                   errors.beliche
                     ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
-                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'border-orange-400/30 focus:border-orange-400 focus:ring-orange-400/20'
                 }`}
               >
                 <option value="">Selecione uma opção</option>
@@ -345,16 +414,16 @@ export default function InscricaoForm() {
 
             {/* Já participou antes */}
             <motion.div custom={6} variants={inputVariants} initial="hidden" animate="visible">
-              <label className="block text-blue-200 font-semibold mb-2">Já participou de retiros antes?</label>
+              <label className="block text-orange-200 font-semibold mb-2">Já participou de retiros antes?</label>
               <select
                 name="participouAntes"
                 value={formData.participouAntes}
                 onChange={handleChange}
                 required
-                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full bg-orange-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
                   errors.participouAntes
                     ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
-                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'border-orange-400/30 focus:border-orange-400 focus:ring-orange-400/20'
                 }`}
               >
                 <option value="">Selecione uma opção</option>
@@ -366,16 +435,16 @@ export default function InscricaoForm() {
 
             {/* Como conheceu */}
             <motion.div custom={7} variants={inputVariants} initial="hidden" animate="visible">
-              <label className="block text-blue-200 font-semibold mb-2">Como conheceu o retiro?</label>
+              <label className="block text-orange-200 font-semibold mb-2">Como conheceu o retiro?</label>
               <select
                 name="comoConheceu"
                 value={formData.comoConheceu}
                 onChange={handleChange}
                 required
-                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full bg-orange-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
                   errors.comoConheceu
                     ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
-                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'border-orange-400/30 focus:border-orange-400 focus:ring-orange-400/20'
                 }`}
               >
                 <option value="">Selecione uma opção</option>
@@ -391,16 +460,16 @@ export default function InscricaoForm() {
 
             {/* Tipo de Pagamento */}
             <motion.div custom={8} variants={inputVariants} initial="hidden" animate="visible">
-              <label className="block text-blue-200 font-semibold mb-2">Forma de Pagamento</label>
+              <label className="block text-orange-200 font-semibold mb-2">Forma de Pagamento</label>
               <select
                 name="tipoPagamento"
                 value={formData.tipoPagamento}
                 onChange={handleChange}
                 required
-                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full bg-orange-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
                   errors.tipoPagamento
                     ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
-                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'border-orange-400/30 focus:border-orange-400 focus:ring-orange-400/20'
                 }`}
               >
                 <option value="">Selecione uma opção</option>
@@ -412,16 +481,16 @@ export default function InscricaoForm() {
 
             {/* Precisa de Transporte */}
             <motion.div custom={9} variants={inputVariants} initial="hidden" animate="visible">
-              <label className="block text-blue-200 font-semibold mb-2">Precisa de Transporte?</label>
+              <label className="block text-orange-200 font-semibold mb-2">Precisa de Transporte?</label>
               <select
                 name="precisaTransporte"
                 value={formData.precisaTransporte}
                 onChange={handleChange}
                 required
-                className={`w-full bg-blue-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
+                className={`w-full bg-orange-950/50 border rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 transition-all ${
                   errors.precisaTransporte
                     ? 'border-red-400 focus:border-red-400 focus:ring-red-400/20'
-                    : 'border-blue-400/30 focus:border-blue-400 focus:ring-blue-400/20'
+                    : 'border-orange-400/30 focus:border-orange-400 focus:ring-orange-400/20'
                 }`}
               >
                 <option value="">Selecione uma opção</option>
@@ -453,17 +522,60 @@ export default function InscricaoForm() {
             </motion.div>
           )}
 
-          {/* Submit button */}
-          <motion.button
-            type="submit"
-            disabled={loading}
-            className="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 disabled:opacity-50"
-            whileHover={{ scale: loading ? 1 : 1.02 }}
-            whileTap={{ scale: loading ? 1 : 0.98 }}
-          >
-            {loading ? 'Enviando...' : 'Confirmar Inscrição'}
-          </motion.button>
-        </motion.form>
+          {/* Botões de ação */}
+          <div className="flex gap-4 flex-col md:flex-row">
+            {/* Botão de adicionar mais inscritos */}
+            <motion.button
+              type="button"
+              onClick={() => {
+                const newInscritos = [...inscritos, {
+                  nome: '',
+                  email: '',
+                  telefone: '',
+                  idade: '',
+                  alergia: '',
+                  beliche: '',
+                  participouAntes: '',
+                  comoConheceu: '',
+                  tipoPagamento: '',
+                  precisaTransporte: '',
+                }];
+                setInscritos(newInscritos);
+              }}
+              className="py-3 px-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 flex items-center justify-center gap-2"
+            >
+              ➕ Adicionar Outra Pessoa
+            </motion.button>
+
+            {/* Remover inscrição (apareça apenas se houver mais de 1) */}
+            {totalInscritos > 1 && (
+              <motion.button
+                type="button"
+                onClick={() => {
+                  const newInscritos = inscritos.filter((_, i) => i !== currentIndex);
+                  setInscritos(newInscritos);
+                  if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
+                }}
+                className="py-3 px-6 bg-gradient-to-r from-red-600 to-orange-600 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 flex items-center justify-center gap-2"
+              >
+                🗑️ Remover Esta Pessoa
+              </motion.button>
+            )}
+
+            {/* Botão de submit */}
+            <motion.button
+              type="submit"
+              disabled={loading}
+              className="flex-1 py-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold rounded-lg hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300 disabled:opacity-50"
+              whileHover={{ scale: loading ? 1 : 1.02 }}
+              whileTap={{ scale: loading ? 1 : 0.98 }}
+            >
+              {loading ? 'Processando...' : currentIndex < totalInscritos - 1 ? 'Próxima Pessoa' : 'Confirmar Inscrições'}
+            </motion.button>
+          </div>
+            </motion.form>
+          </>
+        )}
       </motion.div>
     </section>
   );

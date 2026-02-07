@@ -38,7 +38,7 @@ export default function ApresentacaoRetiro() {
   };
 
   return (
-    <section id="sobre" className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 py-20 px-4">
+    <section id="sobre" className="min-h-screen bg-gradient-to-br from-slate-900 via-orange-950 to-slate-900 py-20 px-4">
       <motion.div
         className="max-w-6xl mx-auto"
         variants={containerVariants}
@@ -49,9 +49,9 @@ export default function ApresentacaoRetiro() {
         {/* Header */}
         <motion.div className="text-center mb-16" variants={itemVariants}>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Sobre o Retiro <span className="text-cyan-400">Closer</span>
+            Sobre o Retiro <span className="text-amber-400">Closer</span>
           </h2>
-          <p className="text-blue-200 text-lg max-w-2xl mx-auto">
+          <p className="text-orange-200 text-lg max-w-2xl mx-auto">
             Uma experiência de 3 dias inesquecível para crescimento espiritual e conexão comunitária
           </p>
         </motion.div>
@@ -60,7 +60,7 @@ export default function ApresentacaoRetiro() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {/* Data */}
           <motion.div
-            className="bg-blue-900/30 backdrop-blur-md border border-blue-400/20 rounded-2xl p-8 hover:border-blue-400/50 transition-all"
+            className="bg-orange-900/30 backdrop-blur-md border border-orange-400/20 rounded-2xl p-8 hover:border-orange-400/50 transition-all"
             variants={cardVariants}
             custom={0}
             initial="hidden"
@@ -70,8 +70,8 @@ export default function ApresentacaoRetiro() {
           >
             <div className="text-4xl mb-4">📅</div>
             <h3 className="text-xl font-bold text-white mb-3">Data</h3>
-            <p className="text-blue-200 text-lg font-semibold mb-2">20 - 22 de Fevereiro</p>
-            <div className="space-y-2 text-blue-300 text-sm">
+            <p className="text-orange-200 text-lg font-semibold mb-2">20 - 22 de Fevereiro</p>
+            <div className="space-y-2 text-orange-300 text-sm">
               <p>✓ Sexta-feira a Domingo</p>
               <p>✓ Check-in: Sexta às 18h</p>
               <p>✓ Check-out: Domingo às 17h</p>
@@ -80,7 +80,7 @@ export default function ApresentacaoRetiro() {
 
           {/* Vagas */}
           <motion.div
-            className="bg-blue-900/30 backdrop-blur-md border border-blue-400/20 rounded-2xl p-8 hover:border-blue-400/50 transition-all"
+            className="bg-orange-900/30 backdrop-blur-md border border-orange-400/20 rounded-2xl p-8 hover:border-orange-400/50 transition-all"
             variants={cardVariants}
             custom={1}
             initial="hidden"
@@ -91,24 +91,24 @@ export default function ApresentacaoRetiro() {
             <div className="text-4xl mb-4">🎫</div>
             <h3 className="text-xl font-bold text-white mb-3">Vagas Disponíveis</h3>
             <div className="flex items-baseline gap-2 mb-4">
-              <span className="text-4xl font-bold text-cyan-400">100</span>
-              <span className="text-blue-300">vagas totais</span>
+              <span className="text-4xl font-bold text-amber-400">100</span>
+              <span className="text-orange-300">vagas totais</span>
             </div>
-            <div className="w-full bg-blue-950/50 rounded-full h-2 overflow-hidden">
+            <div className="w-full bg-orange-950/50 rounded-full h-2 overflow-hidden">
               <motion.div
-                className="bg-gradient-to-r from-blue-400 to-cyan-400 h-full"
+                className="bg-gradient-to-r from-orange-400 to-amber-400 h-full"
                 initial={{ width: 0 }}
                 whileInView={{ width: '45%' }}
                 viewport={{ once: true }}
                 transition={{ duration: 1.5, delay: 0.5 }}
               />
             </div>
-            <p className="text-blue-300 text-xs mt-2">Muitas vagas ainda disponíveis!</p>
+            <p className="text-orange-300 text-xs mt-2">Muitas vagas ainda disponíveis!</p>
           </motion.div>
 
           {/* Local */}
           <motion.div
-            className="bg-blue-900/30 backdrop-blur-md border border-blue-400/20 rounded-2xl p-8 hover:border-blue-400/50 transition-all"
+            className="bg-orange-900/30 backdrop-blur-md border border-orange-400/20 rounded-2xl p-8 hover:border-orange-400/50 transition-all"
             variants={cardVariants}
             custom={2}
             initial="hidden"
@@ -118,15 +118,15 @@ export default function ApresentacaoRetiro() {
           >
             <div className="text-4xl mb-4">📍</div>
             <h3 className="text-xl font-bold text-white mb-3">Local</h3>
-            <p className="text-blue-200 font-semibold mb-2">Quintal dos Belgas</p>
-            <p className="text-blue-300 text-sm mb-3">RS 020 - Parada 89</p>
-            <p className="text-blue-300 text-sm font-semibold">Gravataí, RS</p>
+            <p className="text-orange-200 font-semibold mb-2">Quintal dos Belgas</p>
+            <p className="text-orange-300 text-sm mb-3">RS 020 - Parada 89</p>
+            <p className="text-orange-300 text-sm font-semibold">Gravataí, RS</p>
           </motion.div>
         </div>
 
         {/* Coordenação */}
         <motion.div
-          className="bg-gradient-to-r from-blue-900/40 via-blue-900/30 to-blue-900/40 backdrop-blur-md border border-blue-400/20 rounded-2xl p-8"
+          className="bg-gradient-to-r from-orange-900/40 via-orange-900/30 to-orange-900/40 backdrop-blur-md border border-orange-400/20 rounded-2xl p-8"
           variants={itemVariants}
           initial="hidden"
           whileInView="visible"
@@ -157,25 +157,25 @@ export default function ApresentacaoRetiro() {
             ].map((coordenador, index) => (
               <motion.div
                 key={index}
-                className="bg-blue-950/50 border border-blue-400/20 rounded-lg p-4 text-center"
+                className="bg-orange-950/50 border border-orange-400/20 rounded-lg p-4 text-center"
                 whileHover={{ scale: 1.05 }}
                 transition={{ type: 'spring', stiffness: 300 }}
               >
                 <div className="text-3xl mb-2">{coordenador.icon}</div>
                 <p className="text-white font-bold text-lg">{coordenador.nome}</p>
-                <p className="text-blue-400 text-sm">{coordenador.cargo}</p>
+                <p className="text-orange-400 text-sm">{coordenador.cargo}</p>
               </motion.div>
             ))}
           </div>
 
           <motion.div
-            className="mt-6 bg-blue-500/20 border border-blue-400/30 rounded-lg p-4 text-center"
+            className="mt-6 bg-orange-500/20 border border-orange-400/30 rounded-lg p-4 text-center"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
           >
-            <p className="text-blue-200">
+            <p className="text-orange-200">
               <span className="font-bold">Em caso de dúvidas,</span> dirija-se à Coordenação Geral
             </p>
           </motion.div>
@@ -189,9 +189,9 @@ export default function ApresentacaoRetiro() {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <div className="bg-blue-900/20 border border-cyan-400/20 rounded-xl p-6">
-            <h4 className="text-lg font-bold text-cyan-400 mb-3">✨ O que te espera</h4>
-            <ul className="space-y-2 text-blue-200 text-sm">
+          <div className="bg-orange-900/20 border border-amber-400/20 rounded-xl p-6">
+            <h4 className="text-lg font-bold text-amber-400 mb-3">✨ O que te espera</h4>
+            <ul className="space-y-2 text-orange-200 text-sm">
               <li>✓ Momentos de louvor e comunhão no Espírito</li>
               <li>✓ Mensagens transformadoras da Palavra</li>
               <li>✓ Conexão genuína com a comunidade cristã</li>
@@ -200,9 +200,9 @@ export default function ApresentacaoRetiro() {
             </ul>
           </div>
 
-          <div className="bg-blue-900/20 border border-blue-400/20 rounded-xl p-6">
-            <h4 className="text-lg font-bold text-blue-400 mb-3">🎒 Prepare-se para</h4>
-            <ul className="space-y-2 text-blue-200 text-sm">
+          <div className="bg-orange-900/20 border border-orange-400/20 rounded-xl p-6">
+            <h4 className="text-lg font-bold text-orange-400 mb-3">🎒 Prepare-se para</h4>
+            <ul className="space-y-2 text-orange-200 text-sm">
               <li>✓ Crescimento real com Jesus Cristo</li>
               <li>✓ Amizades que vão durar para vida toda</li>
               <li>✓ Uma experiência que vai te transformar</li>

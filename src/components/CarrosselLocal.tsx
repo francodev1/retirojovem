@@ -92,7 +92,7 @@ export default function CarrosselLocal() {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
+    <section className="py-20 bg-gradient-to-br from-slate-900 via-orange-950 to-slate-900">
       <motion.div
         className="max-w-6xl mx-auto px-4"
         initial={{ opacity: 0 }}
@@ -129,7 +129,7 @@ export default function CarrosselLocal() {
                 transition={{ duration: 0.8 }}
               >
                 {/* Imagem */}
-                <div className="w-full h-full bg-gradient-to-br from-blue-900 to-slate-900 flex items-center justify-center relative">
+                <div className="w-full h-full bg-gradient-to-br from-orange-900 to-slate-900 flex items-center justify-center relative">
                   <img
                     src={slide.src}
                     alt={slide.title}
@@ -201,7 +201,7 @@ export default function CarrosselLocal() {
           ].map((item, idx) => (
             <motion.div
               key={idx}
-              className="bg-blue-900/30 border border-blue-400/20 rounded-xl p-6 text-center"
+              className="bg-orange-900/30 border border-orange-400/20 rounded-xl p-6 text-center"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}

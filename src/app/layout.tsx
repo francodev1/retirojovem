@@ -15,6 +15,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Retiro Closer - Experiência Transformadora para Jovens Cristãos",
   description: "Inscreva-se no Retiro Closer, uma experiência única para jovens cristãos de 13 a 30 anos.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+  },
 };
 
 export default function RootLayout({
