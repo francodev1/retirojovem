@@ -40,12 +40,10 @@ export async function POST(req: NextRequest) {
       payment_methods: {
         excluded_payment_types: [
           { id: 'ticket' },
-          { id: 'bank_transfer' },
           { id: 'atm' },
           { id: 'credit_card' },
           { id: 'debit_card' },
           { id: 'prepaid_card' },
-          { id: 'account_money' },
         ],
         default_payment_method_id: 'pix',
       },

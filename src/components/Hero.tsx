@@ -102,20 +102,8 @@ export default function Hero() {
         animate="visible"
       >
         {/* Citação Bíblica */}
-        <motion.p
-          className="text-base md:text-lg text-orange-300/90 italic mb-3 leading-relaxed"
-          variants={itemVariants}
-        >
-          "Não se amoldem ao padrão deste mundo, mas transformem-se pela renovação da sua mente" - Romanos 12:2
-        </motion.p>
-
-        {/* Descrição do Closer */}
-        <motion.p
-          className="text-sm md:text-base text-orange-300/70 mb-8 leading-relaxed"
-          variants={itemVariants}
-        >
-          Closer significa "mais perto" - um momento para você se aproximar de Jesus, do Pai Celestial e do Espírito Santo, crescendo em comunhão genuína com a galera.
-        </motion.p>
+       
+        
 
         {/* Main Description */}
         <motion.p
@@ -139,6 +127,22 @@ export default function Hero() {
             className="h-auto w-auto drop-shadow-2xl"
           />
         </motion.div>
+
+         <motion.p
+          className="text-base md:text-lg text-orange-300/90 italic mb-3 leading-relaxed"
+          variants={itemVariants}
+        >
+          "Não se amoldem ao padrão deste mundo, mas transformem-se pela renovação da sua mente" - Romanos 12:2
+        </motion.p>
+
+        {/* Descrição do Closer */}
+        <motion.p
+          className="text-sm md:text-base text-orange-300/70 mb-8 leading-relaxed"
+          variants={itemVariants}
+        >
+          Closer significa "mais perto" - um momento para você se aproximar de Jesus, do Pai Celestial e do Espírito Santo, crescendo em comunhão genuína com a galera.
+        </motion.p>
+
 
         {/* CTA Buttons */}
         <motion.div

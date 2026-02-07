@@ -5,7 +5,6 @@ import { useState, useEffect } from 'react';
 
 const VALOR_POR_INSCRICAO = 289;
 const VALOR_INSCRICAO_CARTAO = 296;
-const PIX_ESTATICO = '00020101021126810014BR.GOV.BCB.PIX2559pix-qr.mercadopago.com/instore/ol/v2/3Z93NLRsiiBmx1Ecojwhpj5204000053039865802BR5912FONTE CHURCH6009SAO PAULO62080504mpis630456D4';
 
 export default function PagamentoPage() {
   const [loading, setLoading] = useState(false);
@@ -45,7 +44,7 @@ export default function PagamentoPage() {
     
     try {
       console.log('🔵 Criando PIX com MercadoPago...');
-      const response = await fetch('/api/pagamento/cartao', {
+      const response = await fetch('/api/pagamento/pix', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -163,7 +162,7 @@ export default function PagamentoPage() {
 
         {/* Métodos de pagamento */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* PIX Estático */}
+          {/* PIX */}
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -175,11 +174,6 @@ export default function PagamentoPage() {
             <h3 className="text-2xl font-bold text-orange-300 mb-2">PIX</h3>
             <p className="text-gray-400 text-sm mb-4">Pagamento instantâneo e seguro</p>
             <p className="text-orange-400 font-bold text-lg mb-4">R$ {totalValue.toFixed(2).replace('.', ',')}</p>
-            <img 
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(PIX_ESTATICO)}`}
-              alt="QR Code PIX" 
-              className="w-48 h-48 mx-auto rounded-lg bg-white p-2"
-            />
           </motion.button>
 
           {/* Cartão Crédito */}
