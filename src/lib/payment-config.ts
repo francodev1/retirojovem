@@ -7,7 +7,7 @@ export const PIX_CONFIG = {
   // Ou dados para gerar o QR Code dinamicamente
   banco: 'Seu Banco',
   titular: 'Retiro Closer',
-  valor: 299.00,
+  valor: 299.90,
 };
 
 // MercadoPago Configuration
@@ -17,7 +17,7 @@ export const MERCADOPAGO_CONFIG = {
 };
 
 // Preço padrão
-export const PRECO_RETIRO = 299.00;
+export const PRECO_RETIRO = 299.90;
 export const JUROS_PARCELA = 0.04; // 4% por parcela
 
 // Calcular parcelamento

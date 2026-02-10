@@ -3,8 +3,8 @@
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 
-const VALOR_POR_INSCRICAO = 289;
-const VALOR_INSCRICAO_CARTAO = 296;
+const VALOR_POR_INSCRICAO = 299.90;
+const VALOR_INSCRICAO_CARTAO = 315.65; // Valor ajustado para receber R$ 299,90 líquido após taxa MercadoPago (~4,99%)
 
 export default function PagamentoPage() {
   const [loading, setLoading] = useState(false);
@@ -155,7 +155,7 @@ export default function PagamentoPage() {
           )}
           
           <div className="border-t border-orange-400/20 pt-4 flex justify-between">
-            <span className="text-gray-400">Subtotal ({quantidadeInscricoes}x R$ 289,00)</span>
+            <span className="text-gray-400">Subtotal ({quantidadeInscricoes}x R$ 299,90)</span>
             <span className="text-white">R$ {totalValue.toFixed(2).replace('.', ',')}</span>
           </div>
         </motion.div>
