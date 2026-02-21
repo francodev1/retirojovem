@@ -134,6 +134,44 @@ export async function appendToSheet(data: FormData) {
   return sendToGoogleSheets(data);
 }
 
+// Garantir que a aba "Perguntas" existe, criando se necessário
+async function ensurePerguntasSheet(sheets: ReturnType<typeof google.sheets>, spreadsheetId: string) {
+  try {
+    const meta = await sheets.spreadsheets.get({ spreadsheetId });
+    const abas = meta.data.sheets || [];
+    const existe = abas.some((s) => s.properties?.title === 'Perguntas');
+
+    if (!existe) {
+      await sheets.spreadsheets.batchUpdate({
+        spreadsheetId,
+        requestBody: {
+          requests: [
+            {
+              addSheet: {
+                properties: { title: 'Perguntas' },
+              },
+            },
+          ],
+        },
+      });
+
+      // Adicionar cabeçalhos
+      await sheets.spreadsheets.values.update({
+        spreadsheetId,
+        range: 'Perguntas!A1:D1',
+        valueInputOption: 'USER_ENTERED',
+        requestBody: {
+          values: [['Data', 'Pergunta', 'Status', 'Resposta']],
+        },
+      });
+
+      console.log('✅ Aba "Perguntas" criada no Sheets');
+    }
+  } catch (err) {
+    console.warn('⚠️ Não foi possível verificar/criar aba Perguntas:', err);
+  }
+}
+
 // Salvar pergunta anônima
 export async function savePergunta(pergunta: string) {
   try {
@@ -145,12 +183,14 @@ export async function savePergunta(pergunta: string) {
       throw new Error('GOOGLE_SHEETS_ID não está configurado');
     }
 
+    await ensurePerguntasSheet(sheets, spreadsheetId);
+
     const values = [
       [
         new Date().toLocaleString('pt-BR'),
         pergunta,
-        'Pendente', // status
-        '', // resposta
+        'Pendente',
+        '',
       ],
     ];
 
@@ -181,6 +221,8 @@ export async function getPerguntas() {
     if (!spreadsheetId) {
       throw new Error('GOOGLE_SHEETS_ID não está configurado');
     }
+
+    await ensurePerguntasSheet(sheets, spreadsheetId);
 
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId,
