@@ -133,3 +133,71 @@ export async function sendToGoogleSheets(data: FormData) {
 export async function appendToSheet(data: FormData) {
   return sendToGoogleSheets(data);
 }
+
+// Salvar pergunta anônima
+export async function savePergunta(pergunta: string) {
+  try {
+    const auth = getAuthClient();
+    const sheets = google.sheets({ version: 'v4', auth });
+
+    const spreadsheetId = process.env.GOOGLE_SHEETS_PERGUNTAS_ID || process.env.GOOGLE_SHEETS_ID;
+    if (!spreadsheetId) {
+      throw new Error('GOOGLE_SHEETS_ID não está configurado');
+    }
+
+    const values = [
+      [
+        new Date().toLocaleString('pt-BR'),
+        pergunta,
+        'Pendente', // status
+        '', // resposta
+      ],
+    ];
+
+    const result = await sheets.spreadsheets.values.append({
+      spreadsheetId,
+      range: 'Perguntas!A2',
+      valueInputOption: 'USER_ENTERED',
+      requestBody: {
+        values,
+      },
+    });
+
+    console.log('✅ Pergunta adicionada ao Sheets');
+    return result.data;
+  } catch (error) {
+    console.error('❌ Erro ao adicionar pergunta ao Sheets:', error);
+    throw error;
+  }
+}
+
+// Buscar perguntas
+export async function getPerguntas() {
+  try {
+    const auth = getAuthClient();
+    const sheets = google.sheets({ version: 'v4', auth });
+
+    const spreadsheetId = process.env.GOOGLE_SHEETS_PERGUNTAS_ID || process.env.GOOGLE_SHEETS_ID;
+    if (!spreadsheetId) {
+      throw new Error('GOOGLE_SHEETS_ID não está configurado');
+    }
+
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: 'Perguntas!A2:D',
+    });
+
+    const rows = response.data.values || [];
+    
+    return rows.map((row, index) => ({
+      id: index + 1,
+      data: row[0] || '',
+      pergunta: row[1] || '',
+      status: row[2] || 'Pendente',
+      resposta: row[3] || '',
+    }));
+  } catch (error) {
+    console.error('❌ Erro ao buscar perguntas:', error);
+    throw error;
+  }
+}
